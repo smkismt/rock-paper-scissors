@@ -155,11 +155,58 @@
     <p id="result"></p>
 
     <script>
-      // =========================================
-      //
-      // ここにじゃんけんゲームのロジックを実装してください
-      //
-      // =========================================
+      const buttonGroup = document.querySelector(".button-group");
+      const hands = { 0: "グー", 1: "チョキ", 2: "パー" };
+      const winHands = { 0: "チョキ", 1: "パー", 2: "グー" };
+
+      const cheatMode = document.querySelector("#cheatMode");
+      const body = document.querySelector("body");
+      cheatMode.addEventListener("change", (event) => {
+        if (event.target.checked) {
+          body.classList.add("cheat-active");
+        } else {
+          body.classList.remove("cheat-active");
+        }
+      });
+
+      buttonGroup.addEventListener("click", (event) => {
+        const result = document.querySelector("#result");
+        result.textContent = "";
+        result.classList.remove("win", "lose", "draw");
+
+        const playerHand = event.target.textContent;
+        let playerHandIndex = 0;
+
+        switch (Boolean(playerHand)) {
+          case playerHand.includes("グー"):
+            playerHandIndex = 0;
+            break;
+          case playerHand.includes("チョキ"):
+            playerHandIndex = 1;
+            break;
+          case playerHand.includes("パー"):
+            playerHandIndex = 2;
+            break;
+        }
+
+        if (cheatMode.checked) {
+          result.textContent = `あなた:${hands[playerHandIndex]}　相手:${winHands[playerHandIndex]}　→あなたの勝ち！（チートON）`;
+          result.classList.add("win");
+        } else {
+          const cpuHandIndex = Math.floor(Math.random() * 3);
+
+          if (playerHandIndex === cpuHandIndex) {
+            result.textContent = `あなた:${hands[playerHandIndex]}　相手:${hands[cpuHandIndex]}　→あいこ！`;
+            result.classList.add("draw");
+          } else if (winHands[playerHandIndex] === hands[cpuHandIndex]) {
+            result.textContent = `あなた:${hands[playerHandIndex]}　相手:${hands[cpuHandIndex]}　→あなたの勝ち！`;
+            result.classList.add("win");
+          } else {
+            result.textContent = `あなた:${hands[playerHandIndex]}　相手:${hands[cpuHandIndex]}　→あなたの負け！`;
+            result.classList.add("lose");
+          }
+        }
+      });
     </script>
   </body>
 </html>
